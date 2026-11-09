@@ -37,9 +37,9 @@ Run the tests with `go test ./...`.
 AirPods continuously broadcast a Bluetooth LE advertisement (Apple's
 "proximity pairing" message) carrying the battery of each bud and the case.
 The app listens for these with Windows' own Bluetooth stack, so the AirPods
-don't need to be paired with the PC — Bluetooth just has to be on.
+don't need to be paired with the PC Bluetooth just has to be on.
 
-- AirPods report battery in 10% steps, the same as on an iPhone.
+- AirPods report battery in 10% steps.
 - The case level is only broadcast while at least one bud is in the case, and
   AirPods go quiet in a closed case; the app then shows the last known level
   in grey.

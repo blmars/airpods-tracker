@@ -1,6 +1,6 @@
 //go:build windows
 
-// AirPods Battery — a Windows system-tray app.
+// AirPods Battery tracker om Windows system-tray app.
 //
 // AirPods continuously broadcast a Bluetooth LE advertisement (Apple's
 // "proximity pairing" message) carrying the battery level of each bud and the
