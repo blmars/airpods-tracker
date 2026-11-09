@@ -57,3 +57,7 @@ Thresholds and intervals are constants at the top of `airpods.go`.
 | `icon.go` | Draws the tray badge and packs it as an `.ico` |
 | `airpods_test.go` | Tests for decoding, selection and icon output |
 | `third_party/stub` | Empty placeholders for modules only a dependency's code generator uses |
+
+## License
+
+[MIT](LICENSE)
