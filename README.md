@@ -22,6 +22,28 @@ go build -trimpath -ldflags "-H windowsgui -s -w" -o AirPodsBattery.exe .
 `-H windowsgui` stops a console window from opening alongside the tray icon.
 Run the tests with `go test ./...`.
 
+## Releases and provenance
+
+Pushing a tag such as `v1.0.0` runs the [release workflow](.github/workflows/release.yml),
+which builds the `.exe` on GitHub with the
+[SLSA Go builder](https://github.com/slsa-framework/slsa-github-generator/tree/main/internal/builders/go)
+and attaches two files to the GitHub release:
+
+- `AirPodsBattery.exe`
+- `AirPodsBattery.exe.intoto.jsonl`, signed SLSA Build Level 3 provenance
+  recording the repository, tag, commit and build command that produced it.
+
+To check a download really was built from this repository, install
+[slsa-verifier](https://github.com/slsa-framework/slsa-verifier#installation)
+and run (with the tag you downloaded):
+
+```
+slsa-verifier verify-artifact AirPodsBattery.exe --provenance-path AirPodsBattery.exe.intoto.jsonl --source-uri github.com/blmars/airpods-tracker --source-tag v1.0.0
+```
+
+Provenance proves where the file came from. It is not a Windows code-signing
+certificate, so SmartScreen may still warn about an unrecognised app.
+
 ## What you'll see
 
 - **Tray icon:** the lower of your two buds' battery %, green / amber / red.
@@ -56,6 +78,7 @@ Thresholds and intervals are constants at the top of `airpods.go`.
 | `airpods.go` | Advert decoding and signal-strength selection |
 | `icon.go` | Draws the tray badge and packs it as an `.ico` |
 | `airpods_test.go` | Tests for decoding, selection and icon output |
+| `.slsa-goreleaser.yml` | Build settings for the SLSA release builder (same flags as `build.bat`) |
 | `third_party/stub` | Empty placeholders for modules only a dependency's code generator uses |
 
 ## License
