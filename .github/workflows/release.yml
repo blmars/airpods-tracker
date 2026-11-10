@@ -1,0 +1,38 @@
+name: Release
+
+# Pushing a tag like v1.0.0 builds AirPodsBattery.exe with the SLSA Go builder
+# and attaches it, plus its signed provenance (AirPodsBattery.exe.intoto.jsonl),
+# to a GitHub release for that tag. A manual run builds and signs without
+# publishing; the files are then available as workflow artifacts.
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go test ./...
+
+  build:
+    needs: test
+    permissions:
+      id-token: write # To sign the provenance.
+      contents: write # To upload assets to the release.
+      actions: read # To read the workflow path.
+    # Must stay pinned to a full vX.Y.Z tag: the builder refuses to run, and
+    # slsa-verifier refuses the provenance, for any other kind of reference.
+    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v2.1.0
+    with:
+      go-version-file: go.mod
+      config-file: .slsa-goreleaser.yml
+      upload-assets: ${{ startsWith(github.ref, 'refs/tags/') }}

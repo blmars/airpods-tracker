@@ -1,0 +1,20 @@
+# Build config for the SLSA Go builder (see .github/workflows/release.yml).
+# Mirrors build.bat: go build -trimpath -ldflags "-H windowsgui -s -w"
+version: 1
+
+env:
+  - CGO_ENABLED=0
+
+flags:
+  - -trimpath
+
+goos: windows
+goarch: amd64
+
+binary: AirPodsBattery.exe
+
+# The builder joins these into a single -ldflags value.
+ldflags:
+  - "-H=windowsgui"
+  - "-s"
+  - "-w"
